@@ -32,14 +32,10 @@ class PLEEnv(gym.Env):
         assert obs_type is not None, obs_type
         self.obs_type = obs_type
 
-        self.step = self._step
-        self.reset = self._reset
-        self.render = self._render
-        self.seed = self._seed 
         self.reward_range = game.rewards['win']
 
 
-    def _step(self, a):
+    def step(self, a):
         reward = self.ple_wrapper.act(self._action_set[a])
         if self.obs_type == 'state':
             state = self.ple_wrapper.game.get_state()
@@ -57,7 +53,7 @@ class PLEEnv(gym.Env):
         return len(self._action_set)
 
     # return: (states, observations)
-    def _reset(self):
+    def reset(self):
         self.observation_space = spaces.Box(low=0, high=255, shape=(self.screen_width, self.screen_height, 3), dtype = np.uint8)
         self.ple_wrapper.reset_game()
         if self.obs_type == 'state':
@@ -66,7 +62,7 @@ class PLEEnv(gym.Env):
             state = self._get_image()
         return state
 
-    def _render(self, mode='human', close=False):
+    def render(self, mode='human', close=False):
         if close:
             if self.viewer is not None:
                 self.viewer.close()
@@ -86,7 +82,7 @@ class PLEEnv(gym.Env):
             self.viewer.close()
             self.viewer = None
 
-    def _seed(self, seed):
+    def seed(self, seed):
         rng = np.random.RandomState(seed)
         self.ple_wrapper.rng = rng
         self.ple_wrapper.game.rng = self.ple_wrapper.rng
