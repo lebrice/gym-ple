@@ -54,7 +54,6 @@ class PLEEnv(gym.Env):
 
     # return: (states, observations)
     def reset(self):
-        self.observation_space = spaces.Box(low=0, high=255, shape=(self.screen_width, self.screen_height, 3), dtype = np.uint8)
         self.ple_wrapper.reset_game()
         if self.obs_type == 'state':
             state = self.ple_wrapper.game.get_state()
